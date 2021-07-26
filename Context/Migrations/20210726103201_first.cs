@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Context.Migrations
 {
-    public partial class First : Migration
+    public partial class first : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -36,8 +36,7 @@ namespace Context.Migrations
                 name: "Invoices",
                 columns: table => new
                 {
-                    Invoice_no = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Invoice_no = table.Column<int>(type: "int", nullable: false),
                     Invoice_Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Invoice_TotalQty = table.Column<int>(type: "int", nullable: false),
                     Invoice_TotalPrice = table.Column<int>(type: "int", nullable: false),
@@ -85,27 +84,22 @@ namespace Context.Migrations
             migrationBuilder.InsertData(
                 table: "Customers",
                 columns: new[] { "Customer_ID", "Customer_Name" },
-                values: new object[] { 1, "diana" });
+                values: new object[,]
+                {
+                    { 1, "diana" },
+                    { 2, "silvia" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Items",
                 columns: new[] { "Item_Name", "Item_Price" },
-                values: new object[] { "item1", 10 });
-
-            migrationBuilder.InsertData(
-                table: "Items",
-                columns: new[] { "Item_Name", "Item_Price" },
-                values: new object[] { "item2", 20 });
-
-            migrationBuilder.InsertData(
-                table: "Invoices",
-                columns: new[] { "Invoice_no", "Customer_ID", "Invoice_Date", "Invoice_TotalPrice", "Invoice_TotalQty" },
-                values: new object[] { 1, 1, new DateTime(2021, 7, 18, 22, 3, 56, 607, DateTimeKind.Local).AddTicks(6934), 20, 1 });
-
-            migrationBuilder.InsertData(
-                table: "InvoiceDetails",
-                columns: new[] { "InvoiceDetails_ID", "Invoice_no", "Item_Name", "Quantity", "totalPrice" },
-                values: new object[] { 1, 1, "item1", 2, 20 });
+                values: new object[,]
+                {
+                    { "item1", 10 },
+                    { "item2", 20 },
+                    { "item3", 30 },
+                    { "item4", 40 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_InvoiceDetails_Invoice_no",

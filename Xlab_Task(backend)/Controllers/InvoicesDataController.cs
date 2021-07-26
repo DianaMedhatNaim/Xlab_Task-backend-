@@ -84,7 +84,7 @@ namespace Xlab_Task_backend_.Controllers
         // PUT: api/InvoicesData/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public async Task<IActionResult> PutInvoice(invoice_DataType[] data)
+        public async Task<string> PutInvoice(invoice_DataType[] data)
         { 
             
             
@@ -94,33 +94,43 @@ namespace Xlab_Task_backend_.Controllers
                  invoiceData = _context.Invoices.Where(d => d.Invoice_no == item.invoice_no).FirstOrDefault();
                 invoiceData.Customer_ID = _context.Customers.Where(d => d.Customer_Name == item.customer_Name).Select(d => d.Customer_ID).FirstOrDefault();
                 invoiceData.Invoice_Date = item.invoice_Date;
+                invoiceData.Invoice_TotalPrice = item.invoice_TotalPrice;
+                invoiceData.Invoice_TotalQty = item.invoice_TotalQty;
+                
             }
-            if (invoiceData != null)
+            if (invoiceData != null )
             {
                 _context.Invoices.Update(invoiceData);
                 _context.SaveChanges();
-            }
 
-            
-            var oldData = _context.InvoiceDetails.Where(d => d.Invoice_no == inv_no).ToList();
-            foreach (var item in oldData)
-            {
-                _context.InvoiceDetails.Remove(item);
-                _context.SaveChanges();
-            }
-            foreach (var item in data)
-            {
-                inv_Details = new InvoiceDetails()
+
+
+                var oldData = _context.InvoiceDetails.Where(d => d.Invoice_no == inv_no).ToList();
+                foreach (var item in oldData)
                 {
-                    Quantity = item.quantity,
-                    totalPrice = item.totalPrice,
-                    Item_Name = item.item_Name,
-                    Invoice_no = inv_no
-                };
-                if (inv_Details!=null) {
-                    _context.InvoiceDetails.Add(inv_Details);
+                    _context.InvoiceDetails.Remove(item);
                     _context.SaveChanges();
                 }
+                foreach (var item in data)
+                {
+                    inv_Details = new InvoiceDetails()
+                    {
+                        Quantity = item.quantity,
+                        totalPrice = item.totalPrice,
+                        Item_Name = item.item_Name,
+                        Invoice_no = inv_no
+                    };
+                    if (inv_Details != null)
+                    {
+                        _context.InvoiceDetails.Add(inv_Details);
+                        _context.SaveChanges();
+                    }
+                }
+                return "true";
+            }
+            else
+            {
+                return "false";
             }
 
             //foreach (var item in data)
@@ -134,7 +144,7 @@ namespace Xlab_Task_backend_.Controllers
             //}
             //_context.SaveChanges();
 
-            return NoContent();
+           
         }
 
         //POST: api/InvoicesData
@@ -142,7 +152,7 @@ namespace Xlab_Task_backend_.Controllers
        [HttpPost]
         public async Task<ActionResult<string>> PostInvoice(invoice_DataType[] data)
         {
-            
+            string result = "true";
             
 
             foreach (var item in data)
@@ -150,7 +160,7 @@ namespace Xlab_Task_backend_.Controllers
                 int cust_id = _context.Customers.Where(d => d.Customer_Name == item.customer_Name).Select(d => d.Customer_ID).FirstOrDefault();
                 inv = new Invoice()
                 {
-                   
+                    Invoice_no= item.invoice_no,
                     Invoice_Date = item.invoice_Date,
                     Invoice_TotalQty = item.invoice_TotalQty,
                     Invoice_TotalPrice = item.invoice_TotalPrice,
@@ -167,20 +177,28 @@ namespace Xlab_Task_backend_.Controllers
                 //_context.InvoiceDetails.Add(inv_Details);
                 //_context.SaveChanges();
             }
-            _context.Invoices.Add(inv);
-            _context.SaveChanges();
-            foreach (var item in data)
+            if (inv != null && inv.Customer_ID!=0  )
             {
-                inv_Details = new InvoiceDetails()
-                {
-                    Quantity = item.quantity,
-                    totalPrice = item.totalPrice,
-                    Item_Name = item.item_Name,
-                    Invoice_no = inv.Invoice_no
-                };
-               
-                _context.InvoiceDetails.Add(inv_Details);
+                _context.Invoices.Add(inv);
                 _context.SaveChanges();
+                foreach (var item in data)
+                {
+                    inv_Details = new InvoiceDetails()
+                    {
+                        Quantity = item.quantity,
+                        totalPrice = item.totalPrice,
+                        Item_Name = item.item_Name,
+                        Invoice_no = inv.Invoice_no
+                    };
+                    if (inv_Details != null)
+                    {
+                        _context.InvoiceDetails.Add(inv_Details);
+                        _context.SaveChanges();
+                    }
+                }
+            }
+            else {
+                result = "false";
             }
             //inv = new Invoice()
             //{
@@ -191,17 +209,17 @@ namespace Xlab_Task_backend_.Controllers
             //    Customer_ID = 2
             //};
 
-            return "true";
+            return result;
         }
 
         // DELETE: api/InvoicesData/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInvoice(int id)
+        public async Task<string> DeleteInvoice(int id)
         {
             var invoice = _context.Invoices.Find(id);
             if (invoice == null)
             {
-                return NotFound();
+                return "false";
             }
 
             _context.Invoices.Remove(invoice);
@@ -212,7 +230,7 @@ namespace Xlab_Task_backend_.Controllers
                 _context.InvoiceDetails.Remove(item);
                 _context.SaveChanges();
             }
-            return NoContent();
+            return "true";
         }
 
         //private bool InvoiceExists(int id)

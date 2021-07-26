@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Context.Migrations
 {
     [DbContext(typeof(SalesContext))]
-    [Migration("20210718200357_First")]
-    partial class First
+    [Migration("20210726103201_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,15 +40,18 @@ namespace Context.Migrations
                         {
                             Customer_ID = 1,
                             Customer_Name = "diana"
+                        },
+                        new
+                        {
+                            Customer_ID = 2,
+                            Customer_Name = "silvia"
                         });
                 });
 
             modelBuilder.Entity("Models.Invoice", b =>
                 {
                     b.Property<int>("Invoice_no")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<int>("Customer_ID")
                         .HasColumnType("int");
@@ -67,16 +70,6 @@ namespace Context.Migrations
                     b.HasIndex("Customer_ID");
 
                     b.ToTable("Invoices");
-
-                    b.HasData(
-                        new
-                        {
-                            Invoice_no = 1,
-                            Customer_ID = 1,
-                            Invoice_Date = new DateTime(2021, 7, 18, 22, 3, 56, 607, DateTimeKind.Local).AddTicks(6934),
-                            Invoice_TotalPrice = 20,
-                            Invoice_TotalQty = 1
-                        });
                 });
 
             modelBuilder.Entity("Models.InvoiceDetails", b =>
@@ -105,16 +98,6 @@ namespace Context.Migrations
                     b.HasIndex("Item_Name");
 
                     b.ToTable("InvoiceDetails");
-
-                    b.HasData(
-                        new
-                        {
-                            InvoiceDetails_ID = 1,
-                            Invoice_no = 1,
-                            Item_Name = "item1",
-                            Quantity = 2,
-                            totalPrice = 20
-                        });
                 });
 
             modelBuilder.Entity("Models.Items", b =>
@@ -139,6 +122,16 @@ namespace Context.Migrations
                         {
                             Item_Name = "item2",
                             Item_Price = 20
+                        },
+                        new
+                        {
+                            Item_Name = "item3",
+                            Item_Price = 30
+                        },
+                        new
+                        {
+                            Item_Name = "item4",
+                            Item_Price = 40
                         });
                 });
 

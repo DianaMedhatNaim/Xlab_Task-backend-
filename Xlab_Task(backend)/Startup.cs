@@ -38,6 +38,7 @@ namespace Xlab_Task_backend_
             services.AddTransient<IOperations<InvoiceDetails>, InvoiceDetailsDb>();
             services.AddTransient<IOperations<Items>, ItemsDb>();
             services.AddTransient<IOperations<Invoice>, InvoiceDb>();
+            services.AddTransient<IOperations<Customer>, CustomersDb>();
             services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSwaggerGen(c =>
             {
