@@ -92,10 +92,13 @@ namespace Xlab_Task_backend_.Controllers
             {
                 inv_no = item.invoice_no;
                  invoiceData = _context.Invoices.Where(d => d.Invoice_no == item.invoice_no).FirstOrDefault();
-                invoiceData.Customer_ID = _context.Customers.Where(d => d.Customer_Name == item.customer_Name).Select(d => d.Customer_ID).FirstOrDefault();
-                invoiceData.Invoice_Date = item.invoice_Date;
-                invoiceData.Invoice_TotalPrice = item.invoice_TotalPrice;
-                invoiceData.Invoice_TotalQty = item.invoice_TotalQty;
+                if (invoiceData != null)
+                {
+                    invoiceData.Customer_ID = _context.Customers.Where(d => d.Customer_Name == item.customer_Name).Select(d => d.Customer_ID).FirstOrDefault();
+                    invoiceData.Invoice_Date = item.invoice_Date;
+                    invoiceData.Invoice_TotalPrice = item.invoice_TotalPrice;
+                    invoiceData.Invoice_TotalQty = item.invoice_TotalQty;
+                }
                 
             }
             if (invoiceData != null )
